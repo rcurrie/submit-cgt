@@ -1,0 +1,10 @@
+{
+	"extends": "airbnb",
+  "rules": {
+    "no-undef": 0,
+    "no-return-assign": 0,
+    "react/no-render-return-value": 0,
+    "react/no-array-index-key": 0,
+    "no-console": 0
+  }
+}
