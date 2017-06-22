@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import xml2js from 'xml2js';
+
 
 export default class XMLTree extends React.Component {
 
@@ -8,6 +10,12 @@ export default class XMLTree extends React.Component {
     this.state = {
       xml: this.props.xml || (new DOMParser()).parseFromString('', 'text/xml'),
     };
+  }
+
+	parseXML(xml) {
+    xml2js.parseString(xml, (err, result) => {
+      console.log(result);
+    });
   }
 
   render() {
@@ -36,4 +44,3 @@ fetch('samples/genomic.xml')
   .then(xml => xml.querySelector('variant-report'))
   .then(filteredXML => ReactDOM.render(<XMLTree xml={filteredXML} />, document.getElementById('root')))
   .catch(error => console.log(error));
-
