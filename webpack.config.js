@@ -1,8 +1,5 @@
-var path = require('path');
-var webpack = require('webpack');
- 
 module.exports = {
-  entry: './main.js',
+  entry: './app.jsx',
   output: { path: __dirname, filename: 'bundle.js' },
   module: {
     loaders: [
@@ -11,13 +8,13 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
-          presets: ['es2015', 'react']
-        }
-      }
-    ]
+          presets: ['es2015', 'react'],
+        },
+      },
+    ],
   },
-	devServer: {
+  devServer: {
     host: '0.0.0.0',
-    disableHostCheck: true
-  }
+    disableHostCheck: true,
+  },
 };

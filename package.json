@@ -2,7 +2,7 @@
   "name": "submit-cgt",
   "version": "1.0.0",
   "description": "Submit clinical and genomic data to a Cancer Gene Trust steward",
-  "main": "submission.js",
+  "main": "app.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +18,8 @@
   "homepage": "https://github.com/rcurrie/submit-cgt#readme",
   "dependencies": {
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "xml-js": "^1.3.2"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
