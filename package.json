@@ -11,7 +11,7 @@
     "url": "git+https://github.com/rcurrie/submit-cgt.git"
   },
   "author": "",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/rcurrie/submit-cgt/issues"
   },
@@ -19,6 +19,7 @@
   "dependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "xlsx": "^0.10.5",
     "xml-js": "^1.3.2"
   },
   "devDependencies": {
