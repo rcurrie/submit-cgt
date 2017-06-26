@@ -25,9 +25,16 @@ class App extends React.Component {
       .catch(error => console.log(error));
 
     fetch('samples/clinical.xlsx')
-      .then(response => response.blob())
-      .then(excel => XLSX.read(excel))
-      .then(workbook => console.log(workbook))
+      .then(response => response.arrayBuffer())
+      .then((arrayBuffer) => {
+        const data = new Uint8Array(arrayBuffer);
+        const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
+        const workbook = XLSX.read(binaryString, { type: 'binary' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        return sheet;
+      })
+      .then(sheet => XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0])
+      .then(clinical => this.setState({ clinical }))
       .catch(error => console.log(error));
   }
 
