@@ -12,6 +12,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       clinical: {},
+      clinicalFilter: [],
       genomic: {},
     };
   }
@@ -24,6 +25,15 @@ class App extends React.Component {
       .then(genomic => this.setState({ genomic }))
       .catch(error => console.log(error));
 
+    fetch('clinical_filter.tsv')
+      .then(response => response.text())
+      .then(tsv => tsv.split('\n').map(line => line.split('\t')))
+      .then(array => array.reduce((obj, item) => {
+        Object.assign(obj, { [item[0]]: item[1] }); return obj;
+      }, {}))
+      .then(clinicalFilter => this.setState({ clinicalFilter }))
+      .catch(error => console.log(error));
+
     fetch('samples/clinical.xlsx')
       .then(response => response.arrayBuffer())
       .then((arrayBuffer) => {
@@ -31,16 +41,19 @@ class App extends React.Component {
         const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
         const workbook = XLSX.read(binaryString, { type: 'binary' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        return sheet;
+        const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
+        this.setState({ clinical });
       })
-      .then(sheet => XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0])
-      .then(clinical => this.setState({ clinical }))
       .catch(error => console.log(error));
   }
 
   render() {
     return (
       <div>
+        <div>{Object.keys(this.state.clinical).map(key =>
+          <ul key={key}>{key}:{this.state.clinical[key]}:{this.state.clinicalFilter[key]}</ul>)
+        }
+        </div>
         <Clinical clinical={this.state.clinical} />
         <Genomic genomic={this.state.genomic} />
       </div>
