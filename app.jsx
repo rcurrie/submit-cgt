@@ -12,7 +12,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       clinical: {},
-      clinicalFilter: [],
+      clinicalFilter: {},
       genomic: {},
     };
   }
@@ -25,11 +25,11 @@ class App extends React.Component {
       .then(genomic => this.setState({ genomic }))
       .catch(error => console.log(error));
 
-    fetch('clinical_filter.tsv')
+    fetch('clinicalFilter.tsv')
       .then(response => response.text())
       .then(tsv => tsv.split('\n').map(line => line.split('\t')))
       .then(array => array.reduce((obj, item) => {
-        Object.assign(obj, { [item[0]]: item[1] }); return obj;
+        Object.assign(obj, { [item[0]]: item[2] }); return obj;
       }, {}))
       .then(clinicalFilter => this.setState({ clinicalFilter }))
       .catch(error => console.log(error));
@@ -48,17 +48,27 @@ class App extends React.Component {
   }
 
   render() {
+    console.log('Rendering...');
+    const filtered = Object.keys(this.state.clinical)
+      .filter(key => this.state.clinicalFilter[key] !== '')
+      .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
+    console.log(filtered);
+
     return (
       <div>
-        <div>{Object.keys(this.state.clinical).map(key =>
-          <ul key={key}>{key}:{this.state.clinical[key]}:{this.state.clinicalFilter[key]}</ul>)
-        }
-        </div>
-        <Clinical clinical={this.state.clinical} />
+        <a href="http://www.cancergenetrust.org">
+          <img
+            alt="Cancer Gene Trust Logo"
+            src="images/logo_with_name.png"
+            style={{ padding: '8px', height: '64px' }}
+            className="center-block img-responsive"
+          />
+        </a>
+        <Clinical clinical={filtered} />
         <Genomic genomic={this.state.genomic} />
       </div>
     );
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('app'));
