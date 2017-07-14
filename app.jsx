@@ -52,7 +52,6 @@ class App extends React.Component {
     const filtered = Object.keys(this.state.clinical)
       .filter(key => this.state.clinicalFilter[key] !== '')
       .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
-    console.log(filtered);
 
     return (
       <div>
