@@ -4,6 +4,9 @@ import XLSX from 'xlsx';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import PromiseFileReader from 'promise-file-reader';
+import Dropzone from 'react-dropzone';
+
 import Genomic from './genomic';
 import Clinical from './clinical';
 
@@ -15,15 +18,16 @@ class App extends React.Component {
       clinicalFilter: {},
       genomic: {},
     };
+    this.onDrop = this.onDrop.bind(this);
   }
 
   componentDidMount() {
-    fetch('samples/genomic.xml')
-      .then(response => response.text())
-      .then(xml => convert.xml2js(xml, { compact: true }))
-      .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
-      .then(genomic => this.setState({ genomic }))
-      .catch(error => console.log(error));
+    // fetch('samples/genomic.xml')
+    //   .then(response => response.text())
+    //   .then(xml => convert.xml2js(xml, { compact: true }))
+    //   .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
+    //   .then(genomic => this.setState({ genomic }))
+    //   .catch(error => console.log(error));
 
     fetch('clinicalFilter.tsv')
       .then(response => response.text())
@@ -34,17 +38,53 @@ class App extends React.Component {
       .then(clinicalFilter => this.setState({ clinicalFilter }))
       .catch(error => console.log(error));
 
-    fetch('samples/clinical.xlsx')
-      .then(response => response.arrayBuffer())
-      .then((arrayBuffer) => {
-        const data = new Uint8Array(arrayBuffer);
-        const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
-        const workbook = XLSX.read(binaryString, { type: 'binary' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
-        this.setState({ clinical });
-      })
-      .catch(error => console.log(error));
+    // fetch('samples/clinical.xlsx')
+    //   .then(response => response.arrayBuffer())
+    //   .then((arrayBuffer) => {
+    //     const data = new Uint8Array(arrayBuffer);
+    //     const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
+    //     const workbook = XLSX.read(binaryString, { type: 'binary' });
+    //     const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    //     const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
+    //     this.setState({ clinical });
+    //   })
+    //   .catch(error => console.log(error));
+  }
+
+  onDrop(files) {
+    console.log(files);
+    console.log(this.props);
+    // this.setState({ files });
+    files.forEach((file) => {
+      console.log(this);
+      const reader = new FileReader();
+      reader.onload = () => {
+        // console.log(reader.result);
+        console.log('read another file');
+      };
+      if (file.name.endsWith('xlsx')) {
+        console.log('Reading xlsx');
+        PromiseFileReader.readAsArrayBuffer(file)
+          .then((arrayBuffer) => {
+            const data = new Uint8Array(arrayBuffer);
+            const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
+            const workbook = XLSX.read(binaryString, { type: 'binary' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
+            console.log(clinical);
+            console.log(this);
+            this.setState({ clinical });
+          })
+          .catch(error => console.log(error));
+      } else if (file.name.endsWith('xml')) {
+        console.log('Reading xml');
+        PromiseFileReader.readAsText(file)
+          .then(xml => convert.xml2js(xml, { compact: true }))
+          .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
+          .then(genomic => this.setState({ genomic }))
+          .catch(error => console.log(error));
+      }
+    });
   }
 
   render() {
@@ -63,7 +103,13 @@ class App extends React.Component {
             className="center-block img-responsive"
           />
         </a>
-        <Clinical clinical={filtered} />
+        <Dropzone
+          onDrop={this.onDrop}
+          style={{ height: '100%', width: '100%' }}
+          activeStyle={{ backgroundColor: 'rgba(0, 255, 0, .5)' }}
+        >
+          <Clinical clinical={filtered} />
+        </Dropzone>
         <Genomic genomic={this.state.genomic} />
       </div>
     );
