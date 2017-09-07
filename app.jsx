@@ -94,7 +94,11 @@ class App extends React.Component {
       .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
 
     return (
-      <div>
+      <Dropzone
+        onDrop={this.onDrop}
+        style={{ height: '100%', width: '100%' }}
+        activeStyle={{ backgroundColor: 'rgba(0, 255, 0, .5)' }}
+      >
         <a href="http://www.cancergenetrust.org">
           <img
             alt="Cancer Gene Trust Logo"
@@ -103,15 +107,9 @@ class App extends React.Component {
             className="center-block img-responsive"
           />
         </a>
-        <Dropzone
-          onDrop={this.onDrop}
-          style={{ height: '100%', width: '100%' }}
-          activeStyle={{ backgroundColor: 'rgba(0, 255, 0, .5)' }}
-        >
-          <Clinical clinical={filtered} />
-        </Dropzone>
+        <Clinical clinical={filtered} />
         <Genomic genomic={this.state.genomic} />
-      </div>
+      </Dropzone>
     );
   }
 }
