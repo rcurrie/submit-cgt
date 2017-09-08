@@ -15750,13 +15750,6 @@ var App = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      // fetch('samples/genomic.xml')
-      //   .then(response => response.text())
-      //   .then(xml => convert.xml2js(xml, { compact: true }))
-      //   .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
-      //   .then(genomic => this.setState({ genomic }))
-      //   .catch(error => console.log(error));
-
       fetch('clinicalFilter.tsv').then(function (response) {
         return response.text();
       }).then(function (tsv) {
@@ -15772,18 +15765,6 @@ var App = function (_React$Component) {
       }).catch(function (error) {
         return console.log(error);
       });
-
-      // fetch('samples/clinical.xlsx')
-      //   .then(response => response.arrayBuffer())
-      //   .then((arrayBuffer) => {
-      //     const data = new Uint8Array(arrayBuffer);
-      //     const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
-      //     const workbook = XLSX.read(binaryString, { type: 'binary' });
-      //     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      //     const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
-      //     this.setState({ clinical });
-      //   })
-      //   .catch(error => console.log(error));
     }
   }, {
     key: 'onDrop',
@@ -15827,6 +15808,9 @@ var App = function (_React$Component) {
           }).catch(function (error) {
             return console.log(error);
           });
+        } else {
+          /*eslint no-alert: "noerror"*/
+          window.alert('Unknown file type, must be clinical .xlsx or genomic .xml');
         }
       });
     }

@@ -87,6 +87,11 @@ class App extends React.Component {
             className="center-block img-responsive"
           />
         </a>
+				<div className="input-group">
+					<span className="input-group-addon" id="sizing-addon1">Random Public Participant ID</span>
+					<input type="text" className="form-control" placeholder="123456" 
+					       aria-describedby="sizing-addon1"></input>
+				</div>
         <Dropzone
           onDrop={this.onDrop}
           style={{ height: '100%', width: '100%' }}
