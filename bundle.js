@@ -15862,9 +15862,18 @@ var App = function (_React$Component) {
             style: { height: '100%', width: '100%' },
             activeStyle: { backgroundColor: 'rgba(0, 255, 0, .5)' }
           },
-          _react2.default.createElement(_clinical2.default, { clinical: filtered })
-        ),
-        _react2.default.createElement(_genomic2.default, { genomic: this.state.genomic })
+          _react2.default.createElement(
+            'div',
+            { style: { display: 'flex', justifyContent: 'center' } },
+            _react2.default.createElement(
+              'h4',
+              null,
+              'Drag and drop files onto the page, or click to select files.'
+            )
+          ),
+          _react2.default.createElement(_clinical2.default, { clinical: filtered }),
+          _react2.default.createElement(_genomic2.default, { genomic: this.state.genomic })
+        )
       );
     }
   }]);
