@@ -15840,19 +15840,28 @@ var App = function (_React$Component) {
           })
         ),
         _react2.default.createElement(
+          'div',
+          { className: 'input-group' },
+          _react2.default.createElement(
+            'span',
+            { className: 'input-group-addon', id: 'patient_id' },
+            'Public Random Participant ID'
+          ),
+          _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: '123456',
+            'aria-describedby': 'patient_id' })
+        ),
+        _react2.default.createElement('hr', null),
+        _react2.default.createElement(
           _reactDropzone2.default,
-          {
-            onDrop: this.onDrop,
-            style: { height: '100%', width: '100%' },
-            activeStyle: { backgroundColor: 'rgba(0, 255, 0, .5)' }
-          },
+          { onDrop: this.onDrop,
+            style: { "width": "100%", "height": "100%", "border": "2px dashed black" } },
           _react2.default.createElement(
             'div',
             { style: { display: 'flex', justifyContent: 'center' } },
             _react2.default.createElement(
-              'h4',
+              'p',
               null,
-              'Drag and drop files onto the page, or click to select files.'
+              'Drag and drop files here or click for a file dialog.'
             )
           ),
           _react2.default.createElement(_clinical2.default, { clinical: filtered }),

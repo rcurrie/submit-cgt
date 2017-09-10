@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 
 import PromiseFileReader from 'promise-file-reader';
 import Dropzone from 'react-dropzone';
+import saveAs from 'save-as';
 
 import Genomic from './genomic';
 import Clinical from './clinical';
@@ -14,11 +15,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      patientId: '123',
       clinical: {},
       clinicalFilter: {},
       genomic: {},
     };
     this.onDrop = this.onDrop.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.saveAs = this.saveAs.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +34,22 @@ class App extends React.Component {
       }, {}))
       .then(clinicalFilter => this.setState({ clinicalFilter }))
       .catch(error => console.log(error));
+
+		// fetch('samples/clinical.xlsx')
+      // .then(response => response.arrayBuffer())
+      // .then((arrayBuffer) => {
+        // const data = new Uint8Array(arrayBuffer);
+        // const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
+        // const workbook = XLSX.read(binaryString, { type: 'binary' });
+        // const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        // const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
+        // this.setState({ clinical });
+      // })
+      // .catch(error => console.log(error));
+  }
+
+  onChange(event) {
+    this.setState({patientId: event.target.value});
   }
 
   onDrop(files) {
@@ -71,8 +91,16 @@ class App extends React.Component {
     });
   }
 
+  saveAs() {
+    const submission = new Blob([JSON.stringify({
+      patientId: this.state.patientId,
+      clinical: this.state.clinical,
+      genomic: this.state.genomic,
+    }, null, '\t')], {type: "application/json"});
+    saveAs(submission, this.state.patientId);
+	}
+
   render() {
-    console.log('Rendering...');
     const filtered = Object.keys(this.state.clinical)
       .filter(key => this.state.clinicalFilter[key] !== '')
       .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
@@ -88,20 +116,22 @@ class App extends React.Component {
           />
         </a>
 				<div className="input-group">
-					<span className="input-group-addon" id="sizing-addon1">Random Public Participant ID</span>
-					<input type="text" className="form-control" placeholder="123456" 
-					       aria-describedby="sizing-addon1"></input>
+					<span className="input-group-addon" id="patient-id">Public Random Participant ID</span>
+					<input type="text" className="form-control"
+                 value={this.state.patientId} onChange={this.onChange}
+					       aria-describedby="patient-id"></input>
+            <span className="input-group-btn">
+              <button className="btn btn-default" type="button" onClick={this.saveAs}>Save As...</button>
+            </span>
 				</div>
-        <Dropzone
-          onDrop={this.onDrop}
-          style={{ height: '100%', width: '100%' }}
-          activeStyle={{ backgroundColor: 'rgba(0, 255, 0, .5)' }}
-        >
+        <Dropzone onDrop={this.onDrop}
+            style={{"width" : "100%", "height" : "100%", "border" : "2px dashed black"}}>
+
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <h4>Drag and drop files onto the page, or click to select files.</h4>
+            <p>Drag and drop files here or click for a file dialog.</p>
           </div>
-          <Clinical clinical={filtered} />
-          <Genomic genomic={this.state.genomic} />
+					<Clinical clinical={filtered} />
+					<Genomic genomic={this.state.genomic} />
         </Dropzone>
       </div>
     );
