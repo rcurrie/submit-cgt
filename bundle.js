@@ -15710,11 +15710,15 @@ var _reactDropzone = __webpack_require__(228);
 
 var _reactDropzone2 = _interopRequireDefault(_reactDropzone);
 
-var _genomic = __webpack_require__(231);
+var _saveAs2 = __webpack_require__(231);
+
+var _saveAs3 = _interopRequireDefault(_saveAs2);
+
+var _genomic = __webpack_require__(232);
 
 var _genomic2 = _interopRequireDefault(_genomic);
 
-var _clinical = __webpack_require__(232);
+var _clinical = __webpack_require__(233);
 
 var _clinical2 = _interopRequireDefault(_clinical);
 
@@ -15737,11 +15741,14 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
+      patientId: '123',
       clinical: {},
       clinicalFilter: {},
       genomic: {}
     };
     _this.onDrop = _this.onDrop.bind(_this);
+    _this.onChange = _this.onChange.bind(_this);
+    _this.saveAs = _this.saveAs.bind(_this);
     return _this;
   }
 
@@ -15765,6 +15772,23 @@ var App = function (_React$Component) {
       }).catch(function (error) {
         return console.log(error);
       });
+
+      // fetch('samples/clinical.xlsx')
+      // .then(response => response.arrayBuffer())
+      // .then((arrayBuffer) => {
+      // const data = new Uint8Array(arrayBuffer);
+      // const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
+      // const workbook = XLSX.read(binaryString, { type: 'binary' });
+      // const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      // const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
+      // this.setState({ clinical });
+      // })
+      // .catch(error => console.log(error));
+    }
+  }, {
+    key: 'onChange',
+    value: function onChange(event) {
+      this.setState({ patientId: event.target.value });
     }
   }, {
     key: 'onDrop',
@@ -15815,11 +15839,20 @@ var App = function (_React$Component) {
       });
     }
   }, {
+    key: 'saveAs',
+    value: function saveAs() {
+      var submission = new Blob([JSON.stringify({
+        patientId: this.state.patientId,
+        clinical: this.state.clinical,
+        genomic: this.state.genomic
+      }, null, '\t')], { type: "application/json" });
+      (0, _saveAs3.default)(submission, this.state.patientId);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this4 = this;
 
-      console.log('Rendering...');
       var filtered = Object.keys(this.state.clinical).filter(function (key) {
         return _this4.state.clinicalFilter[key] !== '';
       }).reduce(function (obj, key) {
@@ -15844,13 +15877,22 @@ var App = function (_React$Component) {
           { className: 'input-group' },
           _react2.default.createElement(
             'span',
-            { className: 'input-group-addon', id: 'patient_id' },
+            { className: 'input-group-addon', id: 'patient-id' },
             'Public Random Participant ID'
           ),
-          _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: '123456',
-            'aria-describedby': 'patient_id' })
+          _react2.default.createElement('input', { type: 'text', className: 'form-control',
+            value: this.state.patientId, onChange: this.onChange,
+            'aria-describedby': 'patient-id' }),
+          _react2.default.createElement(
+            'span',
+            { className: 'input-group-btn' },
+            _react2.default.createElement(
+              'button',
+              { className: 'btn btn-default', type: 'button', onClick: this.saveAs },
+              'Export'
+            )
+          )
         ),
-        _react2.default.createElement('hr', null),
         _react2.default.createElement(
           _reactDropzone2.default,
           { onDrop: this.onDrop,
@@ -15861,7 +15903,7 @@ var App = function (_React$Component) {
             _react2.default.createElement(
               'p',
               null,
-              'Drag and drop files here or click for a file dialog.'
+              'Drag and drop files, or click for a file dialog to import.'
             )
           ),
           _react2.default.createElement(_clinical2.default, { clinical: filtered }),
@@ -60125,6 +60167,276 @@ module.exports = function() {
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/* FileSaver.js
+ * A saveAs() FileSaver implementation.
+ *
+ * By Eli Grey, http://eligrey.com
+ * ES6ified by Cole Chamberlain, https://github.com/cchamberlain
+ *
+ * License: MIT
+ *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+ */
+
+/*global self */
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+var saveAs = exports.saveAs = window.saveAs || function (view) {
+  // IE <10 is explicitly unsupported
+  if (typeof navigator !== 'undefined' && /MSIE [1-9]\./.test(navigator.userAgent)) return;
+  var doc = view.document;
+  // only get URL when necessary in case Blob.js hasn't overridden it yet
+  var get_URL = function get_URL() {
+    return view.URL || view.webkitURL || view;
+  };
+  var save_link = doc.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+  var can_use_save_link = 'download' in save_link;
+  var click = function click(node) {
+    var event = new MouseEvent('click');
+    node.dispatchEvent(event);
+  };
+  var is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent);
+  var webkit_req_fs = view.webkitRequestFileSystem;
+  var req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem;
+  var throw_outside = function throw_outside(ex) {
+    (view.setImmediate || view.setTimeout)(function () {
+      throw ex;
+    }, 0);
+  };
+  var force_saveable_type = 'application/octet-stream';
+  var fs_min_size = 0;
+  // the Blob API is fundamentally broken as there is no "downloadfinished" event to subscribe to
+  var arbitrary_revoke_timeout = 1000 * 40; // in ms
+  var revoke = function revoke(file) {
+    var revoker = function revoker() {
+      if (typeof file === 'string') // file is an object URL
+        get_URL().revokeObjectURL(file);else // file is a File
+        file.remove();
+    };
+    /* // Take note W3C:
+    var
+      uri = typeof file === "string" ? file : file.toURL()
+    , revoker = function(evt) {
+      // idealy DownloadFinishedEvent.data would be the URL requested
+      if (evt.data === uri) {
+        if (typeof file === "string") { // file is an object URL
+          get_URL().revokeObjectURL(file);
+        } else { // file is a File
+          file.remove();
+        }
+      }
+    }
+    ;
+    view.addEventListener("downloadfinished", revoker);
+    */
+    setTimeout(revoker, arbitrary_revoke_timeout);
+  };
+  var dispatch = function dispatch(filesaver, event_types, event) {
+    event_types = [].concat(event_types);
+    var i = event_types.length;
+    while (i--) {
+      var listener = filesaver['on' + event_types[i]];
+      if (typeof listener === 'function') {
+        try {
+          listener.call(filesaver, event || filesaver);
+        } catch (ex) {
+          throw_outside(ex);
+        }
+      }
+    }
+  };
+  var auto_bom = function auto_bom(blob) {
+    // prepend BOM for UTF-8 XML and text/* types (including HTML)
+    if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) return new Blob(['﻿', blob], { type: blob.type });
+    return blob;
+  };
+
+  var FileSaver = function FileSaver(blob, name, no_auto_bom) {
+    _classCallCheck(this, FileSaver);
+
+    if (!no_auto_bom) blob = auto_bom(blob);
+    // First try a.download, then web filesystem, then object URLs
+    var filesaver = this,
+        type = blob.type,
+        blob_changed = false,
+        object_url,
+        target_view,
+        dispatch_all = function dispatch_all() {
+      dispatch(filesaver, 'writestart progress write writeend'.split(' '));
+    }
+    // on any filesys errors revert to saving with object URLs
+    ,
+        fs_error = function fs_error() {
+      if (target_view && is_safari && typeof FileReader !== 'undefined') {
+        // Safari doesn't allow downloading of blob urls
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          var base64Data = reader.result;
+          target_view.location.href = 'data:attachment/file' + base64Data.slice(base64Data.search(/[,;]/));
+          filesaver.readyState = filesaver.DONE;
+          dispatch_all();
+        };
+        reader.readAsDataURL(blob);
+        filesaver.readyState = filesaver.INIT;
+        return;
+      }
+      // don't create more object URLs than needed
+      if (blob_changed || !object_url) {
+        object_url = get_URL().createObjectURL(blob);
+      }
+      if (target_view) {
+        target_view.location.href = object_url;
+      } else {
+        var new_tab = view.open(object_url, '_blank');
+        if (new_tab === undefined && is_safari) {
+          //Apple do not allow window.open, see http://bit.ly/1kZffRI
+          view.location.href = object_url;
+        }
+      }
+      filesaver.readyState = filesaver.DONE;
+      dispatch_all();
+      revoke(object_url);
+    },
+        abortable = function abortable(func) {
+      return function () {
+        if (filesaver.readyState !== filesaver.DONE) {
+          return func.apply(this, arguments);
+        }
+      };
+    },
+        create_if_not_found = { create: true, exclusive: false },
+        slice;
+
+    filesaver.readyState = filesaver.INIT;
+    if (!name) {
+      name = 'download';
+    }
+    if (can_use_save_link) {
+      object_url = get_URL().createObjectURL(blob);
+      setTimeout(function () {
+        save_link.href = object_url;
+        save_link.download = name;
+        click(save_link);
+        dispatch_all();
+        revoke(object_url);
+        filesaver.readyState = filesaver.DONE;
+      });
+      return;
+    }
+    // Object and web filesystem URLs have a problem saving in Google Chrome when
+    // viewed in a tab, so I force save with application/octet-stream
+    // http://code.google.com/p/chromium/issues/detail?id=91158
+    // Update: Google errantly closed 91158, I submitted it again:
+    // https://code.google.com/p/chromium/issues/detail?id=389642
+    if (view.chrome && type && type !== force_saveable_type) {
+      slice = blob.slice || blob.webkitSlice;
+      blob = slice.call(blob, 0, blob.size, force_saveable_type);
+      blob_changed = true;
+    }
+    // Since I can't be sure that the guessed media type will trigger a download
+    // in WebKit, I append .download to the filename.
+    // https://bugs.webkit.org/show_bug.cgi?id=65440
+    if (webkit_req_fs && name !== 'download') {
+      name += '.download';
+    }
+    if (type === force_saveable_type || webkit_req_fs) {
+      target_view = view;
+    }
+    if (!req_fs) {
+      fs_error();
+      return;
+    }
+    fs_min_size += blob.size;
+    req_fs(view.TEMPORARY, fs_min_size, abortable(function (fs) {
+      fs.root.getDirectory('saved', create_if_not_found, abortable(function (dir) {
+        var save = function save() {
+          dir.getFile(name, create_if_not_found, abortable(function (file) {
+            file.createWriter(abortable(function (writer) {
+              writer.onwriteend = function (event) {
+                target_view.location.href = file.toURL();
+                filesaver.readyState = filesaver.DONE;
+                dispatch(filesaver, 'writeend', event);
+                revoke(file);
+              };
+              writer.onerror = function () {
+                var error = writer.error;
+                if (error.code !== error.ABORT_ERR) {
+                  fs_error();
+                }
+              };
+              'writestart progress write abort'.split(' ').forEach(function (event) {
+                writer['on' + event] = filesaver['on' + event];
+              });
+              writer.write(blob);
+              filesaver.abort = function () {
+                writer.abort();
+                filesaver.readyState = filesaver.DONE;
+              };
+              filesaver.readyState = filesaver.WRITING;
+            }), fs_error);
+          }), fs_error);
+        };
+        dir.getFile(name, { create: false }, abortable(function (file) {
+          // delete file if it already exists
+          file.remove();
+          save();
+        }), abortable(function (ex) {
+          if (ex.code === ex.NOT_FOUND_ERR) {
+            save();
+          } else {
+            fs_error();
+          }
+        }));
+      }), fs_error);
+    }), fs_error);
+  };
+
+  var FS_proto = FileSaver.prototype;
+  var saveAs = function saveAs(blob, name, no_auto_bom) {
+    return new FileSaver(blob, name, no_auto_bom);
+  };
+
+  // IE 10+ (native saveAs)
+  if (typeof navigator !== 'undefined' && navigator.msSaveOrOpenBlob) {
+    return function (blob, name, no_auto_bom) {
+      if (!no_auto_bom) blob = auto_bom(blob);
+      return navigator.msSaveOrOpenBlob(blob, name || 'download');
+    };
+  }
+
+  FS_proto.abort = function () {
+    var filesaver = this;
+    filesaver.readyState = filesaver.DONE;
+    dispatch(filesaver, 'abort');
+  };
+  FS_proto.readyState = FS_proto.INIT = 0;
+  FS_proto.WRITING = 1;
+  FS_proto.DONE = 2;
+
+  FS_proto.error = FS_proto.onwritestart = FS_proto.onprogress = FS_proto.onwrite = FS_proto.onabort = FS_proto.onerror = FS_proto.onwriteend = null;
+
+  return saveAs;
+}(typeof self !== 'undefined' && self || typeof window !== 'undefined' && window || undefined.content);
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
+
+exports.default = saveAs;
+
+/***/ }),
+/* 232 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _react = __webpack_require__(30);
 
 var _react2 = _interopRequireDefault(_react);
@@ -60151,7 +60463,7 @@ function Genomic(props) {
 module.exports = Genomic;
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

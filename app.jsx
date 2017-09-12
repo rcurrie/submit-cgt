@@ -18,6 +18,7 @@ class App extends React.Component {
       patientId: '123',
       clinical: {},
       clinicalFilter: {},
+      clinicalFiltered: {},
       genomic: {},
     };
     this.onDrop = this.onDrop.bind(this);
@@ -72,9 +73,12 @@ class App extends React.Component {
             const workbook = XLSX.read(binaryString, { type: 'binary' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
-            console.log(clinical);
-            console.log(this);
             this.setState({ clinical });
+
+            const clinicalFiltered = Object.keys(clinical)
+              .filter(key => this.state.clinicalFilter[key] !== '')
+              .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
+            this.setState({ clinicalFiltered });
           })
           .catch(error => console.log(error));
       } else if (file.name.endsWith('xml')) {
@@ -94,17 +98,13 @@ class App extends React.Component {
   saveAs() {
     const submission = new Blob([JSON.stringify({
       patientId: this.state.patientId,
-      clinical: this.state.clinical,
+      clinical: this.state.clinicalFiltered,
       genomic: this.state.genomic,
     }, null, '\t')], {type: "application/json"});
     saveAs(submission, this.state.patientId);
 	}
 
   render() {
-    const filtered = Object.keys(this.state.clinical)
-      .filter(key => this.state.clinicalFilter[key] !== '')
-      .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
-
     return (
       <div>
         <a href="http://www.cancergenetrust.org">
@@ -121,16 +121,16 @@ class App extends React.Component {
                  value={this.state.patientId} onChange={this.onChange}
 					       aria-describedby="patient-id"></input>
             <span className="input-group-btn">
-              <button className="btn btn-default" type="button" onClick={this.saveAs}>Save As...</button>
+              <button className="btn btn-default" type="button" onClick={this.saveAs}>Export</button>
             </span>
 				</div>
         <Dropzone onDrop={this.onDrop}
             style={{"width" : "100%", "height" : "100%", "border" : "2px dashed black"}}>
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <p>Drag and drop files here or click for a file dialog.</p>
+            <p>Drag and drop files, or click for a file dialog to import.</p>
           </div>
-					<Clinical clinical={filtered} />
+					<Clinical clinical={this.state.clinicalFiltered} />
 					<Genomic genomic={this.state.genomic} />
         </Dropzone>
       </div>
