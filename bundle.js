@@ -15744,6 +15744,7 @@ var App = function (_React$Component) {
       patientId: '123',
       clinical: {},
       clinicalFilter: {},
+      clinicalFiltered: {},
       genomic: {}
     };
     _this.onDrop = _this.onDrop.bind(_this);
@@ -15815,9 +15816,14 @@ var App = function (_React$Component) {
             var workbook = _xlsx2.default.read(binaryString, { type: 'binary' });
             var sheet = workbook.Sheets[workbook.SheetNames[0]];
             var clinical = _xlsx2.default.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
-            console.log(clinical);
-            console.log(_this3);
             _this3.setState({ clinical: clinical });
+
+            var clinicalFiltered = Object.keys(clinical).filter(function (key) {
+              return _this3.state.clinicalFilter[key] !== '';
+            }).reduce(function (obj, key) {
+              obj[key] = _this3.state.clinical[key];return obj;
+            }, {});
+            _this3.setState({ clinicalFiltered: clinicalFiltered });
           }).catch(function (error) {
             return console.log(error);
           });
@@ -15843,7 +15849,7 @@ var App = function (_React$Component) {
     value: function saveAs() {
       var submission = new Blob([JSON.stringify({
         patientId: this.state.patientId,
-        clinical: this.state.clinical,
+        clinical: this.state.clinicalFiltered,
         genomic: this.state.genomic
       }, null, '\t')], { type: "application/json" });
       (0, _saveAs3.default)(submission, this.state.patientId);
@@ -15851,14 +15857,6 @@ var App = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
-
-      var filtered = Object.keys(this.state.clinical).filter(function (key) {
-        return _this4.state.clinicalFilter[key] !== '';
-      }).reduce(function (obj, key) {
-        obj[key] = _this4.state.clinical[key];return obj;
-      }, {});
-
       return _react2.default.createElement(
         'div',
         null,
@@ -15906,7 +15904,7 @@ var App = function (_React$Component) {
               'Drag and drop files, or click for a file dialog to import.'
             )
           ),
-          _react2.default.createElement(_clinical2.default, { clinical: filtered }),
+          _react2.default.createElement(_clinical2.default, { clinical: this.state.clinicalFiltered }),
           _react2.default.createElement(_genomic2.default, { genomic: this.state.genomic })
         )
       );
