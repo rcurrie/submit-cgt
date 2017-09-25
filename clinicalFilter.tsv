@@ -100,7 +100,7 @@ Hist/Behav	PILOCYTIC ASTROCYTOMA	Hist/Behav		Health: Disease staging
 Histology Text	PILOCYTIC ASTROCYTOMA			Health: Disease staging	
 Histology/Behavior (ICD-O-3)	94213	Histology/Behavior (ICD-O-3)		Health: Disease staging	
 Hormone, At UCSF	NONE, NOT PLANNED	Hormone, At UCSF		Health: Summary of treatments peformed at UCSF	
-Hormone, Date Started	00/00/0000	Hormone Days Started from First Contact	daysFromFirstContact	Durations: Treatments	
+Hormone, Date Started	00/00/0000	Hormone Started Days from First Contact	daysFromFirstContact	Durations: Treatments	
 Hormone, Reason No RX	NOT RECOMMENDED				
 Hormone, Summary	NONE, NOT PLANNED			Health: Summary of treatments peformed at UCSF	Not necessarily PHI but may contain info re: other facility (rare)
 Hospital of Most Definitive Surg	VALLEY CHILDRENS (OLD)				
