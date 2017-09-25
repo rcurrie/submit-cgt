@@ -20,74 +20,74 @@ class App extends React.Component {
       clinicalFilter: {},
       clinicalFiltered: {},
       genomic: {},
+      dateFirstContact: null,
     };
     this.onDrop = this.onDrop.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.saveAs = this.saveAs.bind(this);
+    this.export = this.export.bind(this);
   }
 
-  componentDidMount() {
-    fetch('clinicalFilter.tsv')
-      .then(response => response.text())
-      .then(tsv => tsv.split('\n').map(line => line.split('\t')))
-      .then(array => array.reduce((obj, item) => {
-        Object.assign(obj, { [item[0]]: item[2] }); return obj;
-      }, {}))
-      .then(clinicalFilter => this.setState({ clinicalFilter }))
+  dateToYear(d) {
+    return new Date(d).getFullYear();
+  }
+
+  daysFromFirstContact(d) {
+    return this.state.dateFirstContact && d !== '' && d !== '00/00/0000' ? 
+      Math.round(Math.abs((new Date(d).getTime() - this.state.dateFirstContact.getTime())
+        /(24*60*60*1000))) : "";
+  }
+
+  parseCNExTFile(file) {
+    console.log('Parsing CNExT XLSX Clinical File');
+    PromiseFileReader.readAsArrayBuffer(file)
+      .then((arrayBuffer) => {
+        const data = new Uint8Array(arrayBuffer);
+        const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
+        const workbook = XLSX.read(binaryString, { type: 'binary' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        if (sheet.B12.v != 'CNExT Software') {
+          window.alert('Clinical xlsx does not appear to be exported from CNExT');
+          return;
+        }
+        const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
+        this.setState({ clinical });
+
+        const dateFirstContact = new Date(clinical["Date First Contact"]);
+        this.setState({ dateFirstContact });
+        clinical["Date First Contact"] = this.dateToYear(dateFirstContact);
+
+        const clinicalFiltered = Object.keys(this.state.clinicalFilter)
+          .reduce((obj, key) => { obj[this.state.clinicalFilter[key].cgt] 
+              = this.state.clinicalFilter[key].transform ?
+                this.daysFromFirstContact(this.state.clinical[key])
+                : this.state.clinical[key]; return obj; }, {});
+        this.setState({ clinicalFiltered });
+      })
       .catch(error => console.log(error));
-
-		// fetch('samples/clinical.xlsx')
-      // .then(response => response.arrayBuffer())
-      // .then((arrayBuffer) => {
-        // const data = new Uint8Array(arrayBuffer);
-        // const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
-        // const workbook = XLSX.read(binaryString, { type: 'binary' });
-        // const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        // const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
-        // this.setState({ clinical });
-      // })
-      // .catch(error => console.log(error));
   }
 
-  onChange(event) {
-    this.setState({patientId: event.target.value});
+  parseFoundationOne(file) {
+    console.log('Parsing FoundationOne XML Genomics File');
+    PromiseFileReader.readAsText(file)
+      .then((text) => {
+        if (!text.includes("FoundationOne")) {
+          throw new Error('Illegal argument: ');
+        }
+        return text;
+      })
+      .then(xml => convert.xml2js(xml, { compact: true }))
+      .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
+      .then(genomic => this.setState({ genomic }))
+      .catch(error => console.log(error));
   }
 
   onDrop(files) {
-    console.log(files);
-    console.log(this.props);
-    // this.setState({ files });
     files.forEach((file) => {
-      console.log(this);
       const reader = new FileReader();
-      reader.onload = () => {
-        // console.log(reader.result);
-        console.log('read another file');
-      };
       if (file.name.endsWith('xlsx')) {
-        console.log('Reading xlsx');
-        PromiseFileReader.readAsArrayBuffer(file)
-          .then((arrayBuffer) => {
-            const data = new Uint8Array(arrayBuffer);
-            const binaryString = data.reduce((acc, cur) => acc + String.fromCharCode(cur), '');
-            const workbook = XLSX.read(binaryString, { type: 'binary' });
-            const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            const clinical = XLSX.utils.sheet_to_json(sheet, { range: 'A6:IQ7' })[0];
-            this.setState({ clinical });
-
-            const clinicalFiltered = Object.keys(clinical)
-              .filter(key => this.state.clinicalFilter[key] !== '')
-              .reduce((obj, key) => { obj[key] = this.state.clinical[key]; return obj; }, {});
-            this.setState({ clinicalFiltered });
-          })
-          .catch(error => console.log(error));
+        this.parseCNExTFile(file);
       } else if (file.name.endsWith('xml')) {
-        console.log('Reading xml');
-        PromiseFileReader.readAsText(file)
-          .then(xml => convert.xml2js(xml, { compact: true }))
-          .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
-          .then(genomic => this.setState({ genomic }))
-          .catch(error => console.log(error));
+        this.parseFoundationOne(file);
       } else {
 				/*eslint no-alert: "noerror"*/
         window.alert('Unknown file type, must be clinical .xlsx or genomic .xml');
@@ -95,7 +95,29 @@ class App extends React.Component {
     });
   }
 
-  saveAs() {
+  componentDidMount() {
+    fetch('clinicalFilter.tsv')
+      .then(response => response.text())
+      .then(tsv => tsv.split('\n').map(line => line.split('\t')))
+      .then(array => array.filter(line => line[2] != ''))
+      .then(array => array.reduce((obj, item) => {
+        Object.assign(obj, { [item[0]]: {'cgt': item[2], 'transform': item[3]} }); return obj;
+      }, {}))
+      .then(clinicalFilter => this.setState({ clinicalFilter }))
+      .catch(error => console.log(error));
+
+    // Debug auto load clinical sample, need to turn off somehow?
+    // fetch('samples/clinical.xlsx')
+    //   .then(file => file.blob())
+    //   .then(blob => this.parseCNExTFile(blob))
+    //   .catch(error => console.log(error));
+  }
+
+  onChange(event) {
+    this.setState({patientId: event.target.value});
+  }
+
+  export() {
     const submission = new Blob([JSON.stringify({
       patientId: this.state.patientId,
       clinical: this.state.clinicalFiltered,
@@ -121,7 +143,7 @@ class App extends React.Component {
                  value={this.state.patientId} onChange={this.onChange}
 					       aria-describedby="patient-id"></input>
             <span className="input-group-btn">
-              <button className="btn btn-default" type="button" onClick={this.saveAs}>Export</button>
+              <button className="btn btn-default" type="button" onClick={this.export}>Export</button>
             </span>
 				</div>
         <Dropzone onDrop={this.onDrop}
