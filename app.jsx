@@ -28,13 +28,13 @@ class App extends React.Component {
   }
 
   dateToYear(d) {
-    return new Date(d).getFullYear();
+    return new Date(d).getFullYear().toString();
   }
 
   daysFromFirstContact(d) {
     return this.state.dateFirstContact && d !== '' && d !== '00/00/0000' ? 
       Math.round(Math.abs((new Date(d).getTime() - this.state.dateFirstContact.getTime())
-        /(24*60*60*1000))) : "";
+        /(24*60*60*1000))).toString() : "";
   }
 
   parseCNExTFile(file) {
@@ -98,7 +98,8 @@ class App extends React.Component {
   componentDidMount() {
     fetch('clinicalFilter.tsv')
       .then(response => response.text())
-      .then(tsv => tsv.split('\n').map(line => line.split('\t')))
+      .then(tsv => tsv.split('\n').slice(1))
+      .then(lines => lines.map(line => line.split('\t')))
       .then(array => array.filter(line => line[2] != ''))
       .then(array => array.reduce((obj, item) => {
         Object.assign(obj, { [item[0]]: {'cgt': item[2], 'transform': item[3]} }); return obj;
@@ -106,11 +107,17 @@ class App extends React.Component {
       .then(clinicalFilter => this.setState({ clinicalFilter }))
       .catch(error => console.log(error));
 
-    // Debug auto load clinical sample, need to turn off somehow?
-    // fetch('samples/clinical.xlsx')
-    //   .then(file => file.blob())
-    //   .then(blob => this.parseCNExTFile(blob))
-    //   .catch(error => console.log(error));
+    // When debugging auto-load sample files
+    if (window.location.hostname == "localhost") {
+      fetch('samples/clinical.xlsx')
+        .then(file => file.blob())
+        .then(blob => this.parseCNExTFile(blob))
+        .catch(error => console.log(error));
+      fetch('samples/genomic.xml')
+        .then(file => file.blob())
+        .then(blob => this.parseFoundationOne(blob))
+        .catch(error => console.log(error));
+    }
   }
 
   onChange(event) {
