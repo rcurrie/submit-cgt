@@ -5,7 +5,7 @@ Addr at DX, Country	UNITED STATES				PHI
 Addr at DX, Postal Code	93662				PHI
 Addr at DX, State	CA				PHI
 Addr Current, City*	CANTUA CREEK				PHI
-Age at Dx	6	Age at Dx		Dates: Age at diagnosis	Or ">90" if >90. 
+Age at Dx	6	Age at Dx		Dates: Age at diagnosis	Or >90 if >90. 
 Behavior (ICD-O-3)	3				
 Birth Date	32888				PHI
 Chemotherapy, At UCSF	NONE, NOT PLANNED	Chemotherapy, At UCSF		Health: Summary of treatments peformed at UCSF	
