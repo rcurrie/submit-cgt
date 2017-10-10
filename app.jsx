@@ -32,7 +32,8 @@ class App extends React.Component {
   }
 
   daysFromFirstContact(d) {
-    return this.state.dateFirstContact && d !== '' && d !== '00/00/0000' ? 
+    console.log("date:", d);
+    return this.state.dateFirstContact && d && d !== '00/00/0000' ? 
       Math.round(Math.abs((new Date(d).getTime() - this.state.dateFirstContact.getTime())
         /(24*60*60*1000))).toString() : "";
   }
