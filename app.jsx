@@ -32,7 +32,6 @@ class App extends React.Component {
   }
 
   daysFromFirstContact(d) {
-    console.log("date:", d);
     return this.state.dateFirstContact && d && d !== '00/00/0000' ? 
       Math.round(Math.abs((new Date(d).getTime() - this.state.dateFirstContact.getTime())
         /(24*60*60*1000))).toString() : "";
@@ -78,7 +77,12 @@ class App extends React.Component {
       })
       .then(xml => convert.xml2js(xml, { compact: true }))
       .then(report => report['rr:ResultsReport']['rr:ResultsPayload']['variant-report'])
-      .then(genomic => this.setState({ genomic }))
+      .then((genomic) => {
+        // redact TRF numbers
+        delete genomic['_attributes']['specimen'];
+        delete genomic['_attributes']['test-request'];
+        this.setState({ genomic });
+      })
       .catch(error => console.log(error));
   }
 
