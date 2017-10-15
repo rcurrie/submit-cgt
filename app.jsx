@@ -1,5 +1,6 @@
 import convert from 'xml-js';
 import XLSX from 'xlsx';
+import uuid from 'uuid/v4';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -15,7 +16,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      patientId: '123',
+      patientId: uuid(),
       clinical: {},
       clinicalFilter: {},
       clinicalFiltered: {},
