@@ -9,8 +9,9 @@ import PromiseFileReader from 'promise-file-reader';
 import Dropzone from 'react-dropzone';
 import saveAs from 'save-as';
 
-import Genomic from './genomic';
 import Clinical from './clinical';
+import Genomic from './genomic';
+import Image from './image';
 
 class App extends React.Component {
   constructor(props) {
@@ -21,11 +22,29 @@ class App extends React.Component {
       clinicalFilter: {},
       clinicalFiltered: {},
       genomic: {},
+      image: null,
+      imageFiltered: null,
       dateFirstContact: null,
     };
     this.onDrop = this.onDrop.bind(this);
     this.onChange = this.onChange.bind(this);
     this.export = this.export.bind(this);
+
+    // cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+    // cornerstoneWADOImageLoader.external.$ = $;
+    // // cornerstoneTools.external.$ = $;
+    // // cornerstoneTools.external.cornerstone = cornerstone;
+    // cornerstone.external.$ = $;
+
+		// const config = {
+			// webWorkerPath: 'node_modules/cornerstone-wado-image-loader/dist/cornerstoneWADOImageLoaderWebWorker.min.js',
+			// taskConfiguration: {
+				// decodeTask: {
+					// codecsPath: 'cornerstoneWADOImageLoaderCodecs.min.js',
+				// }
+			// }
+		// };
+    // cornerstoneWADOImageLoader.webWorkerManager.initialize(config);
   }
 
   dateToYear(d) {
@@ -87,6 +106,59 @@ class App extends React.Component {
       .catch(error => console.log(error));
   }
 
+  parseUCSF500VCF(file) {
+    console.log('Parsing UCSF500 VCF File');
+    PromiseFileReader.readAsText(file)
+      .then((text) => {
+        if (!text.includes("fileformat=VCF")) {
+          throw new Error('Illegal argument: ');
+        }
+        return text;
+      })
+      .then((genomic) => {
+        this.setState({ genomic });
+      })
+      .catch(error => console.log(error));
+  }
+
+  parseDICOM(image) {
+    console.log('Parsing DICOM file');
+    this.setState({ image });
+    // PromiseFileReader.readAsArrayBuffer(file)
+    //   .then((arrayBuffer) => new Uint8Array(arrayBuffer))
+    //   .then((image) => {
+    //     this.setState({ image });
+    //   })
+    // .catch(error => console.log(error));
+  
+    // cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+
+    // var imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
+    // console.log("imageId", imageId);
+    // cornerstone.loadImage(imageId).then(function(image) {
+    //   console.log("loaded cornerstone image", image);
+    // })
+    // .catch(error => console.log(error));
+
+    // PromiseFileReader.readAsArrayBuffer(file)
+    //   .then((arrayBuffer) => dicomParser.parseDicom(new Uint8Array(arrayBuffer)))
+    //   .then((image) => {
+    //     // console.log(image);
+    //     this.setState({ image });
+
+    //     console.log(image.string("x00100010"));
+    //     // image.elements.forEach((element) => {
+    //     //   console.log(element.tag);
+    //     // });
+    //     // Object.entries(image.elements).forEach(([key, value]) => {
+    //     //   console.log(key, image.string(value["tag"]));
+
+    //     //   // console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
+    //     // })
+    //   })
+    //   .catch(error => console.log(error));
+  }
+
   onDrop(files) {
     files.forEach((file) => {
       const reader = new FileReader();
@@ -94,6 +166,10 @@ class App extends React.Component {
         this.parseCNExTFile(file);
       } else if (file.name.endsWith('xml')) {
         this.parseFoundationOne(file);
+      } else if (file.name.endsWith('vcf')) {
+        this.parseUCSF500VCF(file);
+      } else if (file.name.endsWith('dcm')) {
+        this.parseDICOM(file);
       } else {
 				/*eslint no-alert: "noerror"*/
         window.alert('Unknown file type, must be clinical .xlsx or genomic .xml');
@@ -115,13 +191,17 @@ class App extends React.Component {
 
     // When debugging auto-load sample files
     if (window.location.hostname == "localhost") {
-      fetch('samples/clinical.xlsx')
+      // fetch('samples/cnext.xlsx')
+      //   .then(file => file.blob())
+      //   .then(blob => this.parseCNExTFile(blob))
+      //   .catch(error => console.log(error));
+      // fetch('samples/foundationone.xml')
+      //   .then(file => file.blob())
+      //   .then(blob => this.parseFoundationOne(blob))
+      //   .catch(error => console.log(error));
+      fetch('samples/ucsf.dcm')
         .then(file => file.blob())
-        .then(blob => this.parseCNExTFile(blob))
-        .catch(error => console.log(error));
-      fetch('samples/genomic.xml')
-        .then(file => file.blob())
-        .then(blob => this.parseFoundationOne(blob))
+        .then(blob => this.parseDICOM(blob))
         .catch(error => console.log(error));
     }
   }
@@ -161,12 +241,12 @@ class App extends React.Component {
 				</div>
         <Dropzone onDrop={this.onDrop}
             style={{"width" : "100%", "height" : "100%", "border" : "2px dashed black"}}>
-
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <p>Drag and drop files, or click for a file dialog to import.</p>
           </div>
 					<Clinical clinical={this.state.clinicalFiltered} />
 					<Genomic genomic={this.state.genomic} />
+					<Image image={this.state.image} />
         </Dropzone>
       </div>
     );

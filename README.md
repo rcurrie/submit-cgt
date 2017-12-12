@@ -5,3 +5,7 @@ Single page web application that reads various genomic and clinical formats and 
 # Status
 
 Currently experimental and only supports parsing FoudationOne XML genomic data and Cancer Registrar exports from CNEXT in excel format.
+
+# References
+
+[Sample DICOM Files](http://www.barre.nom.fr/medical/samples/)
