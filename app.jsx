@@ -29,22 +29,6 @@ class App extends React.Component {
     this.onDrop = this.onDrop.bind(this);
     this.onChange = this.onChange.bind(this);
     this.export = this.export.bind(this);
-
-    // cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-    // cornerstoneWADOImageLoader.external.$ = $;
-    // // cornerstoneTools.external.$ = $;
-    // // cornerstoneTools.external.cornerstone = cornerstone;
-    // cornerstone.external.$ = $;
-
-		// const config = {
-			// webWorkerPath: 'node_modules/cornerstone-wado-image-loader/dist/cornerstoneWADOImageLoaderWebWorker.min.js',
-			// taskConfiguration: {
-				// decodeTask: {
-					// codecsPath: 'cornerstoneWADOImageLoaderCodecs.min.js',
-				// }
-			// }
-		// };
-    // cornerstoneWADOImageLoader.webWorkerManager.initialize(config);
   }
 
   dateToYear(d) {
@@ -52,7 +36,7 @@ class App extends React.Component {
   }
 
   daysFromFirstContact(d) {
-    return this.state.dateFirstContact && d && d !== '00/00/0000' ? 
+    return this.state.dateFirstContact && d && d !== '00/00/0000' ?
       Math.round(Math.abs((new Date(d).getTime() - this.state.dateFirstContact.getTime())
         /(24*60*60*1000))).toString() : "";
   }
@@ -77,7 +61,7 @@ class App extends React.Component {
         clinical["Date First Contact"] = this.dateToYear(dateFirstContact);
 
         const clinicalFiltered = Object.keys(this.state.clinicalFilter)
-          .reduce((obj, key) => { obj[this.state.clinicalFilter[key].cgt] 
+          .reduce((obj, key) => { obj[this.state.clinicalFilter[key].cgt]
               = this.state.clinicalFilter[key].transform ?
                 this.daysFromFirstContact(this.state.clinical[key])
                 : this.state.clinical[key]; return obj; }, {});
@@ -234,7 +218,7 @@ class App extends React.Component {
 					<span className="input-group-addon" id="patient-id">Public Random Participant ID</span>
 					<input type="text" className="form-control"
                  value={this.state.patientId} onChange={this.onChange}
-					       aria-describedby="patient-id"></input>
+                 aria-describedby="patient-id"></input>
             <span className="input-group-btn">
               <button className="btn btn-default" type="button" onClick={this.export}>Export</button>
             </span>
