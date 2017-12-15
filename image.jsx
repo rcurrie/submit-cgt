@@ -79,6 +79,9 @@ class Image extends React.Component {
         x00102152: { label: 'RegionOfResidence', type: 'text' },
         x00102154: { label: 'PatientsTelephoneNumbers', type: 'text' },
         x00200010: { label: 'StudyID', type: 'text' },
+        x00321030: { label: 'Reason for Study', type: 'text' },
+        x00321032: { label: 'Requesting Physician', type: 'text' },
+        x00321033: { label: 'Requesting Service', type: 'text' },
         x00380300: { label: 'CurrentPatientLocation', type: 'text' },
         x00380400: { label: 'PatientsInstitutionResidence', type: 'text' },
         x0040A120: { label: 'DateTime', type: 'datetime' },
@@ -145,8 +148,8 @@ class Image extends React.Component {
     return (
       <div>
         <h1>Image</h1>
-        <ul>{listItems}</ul>
         <div id="dicomImage" style={{ width: '512px', height: '512px' }} />
+        <ul>{listItems}</ul>
       </div>
     );
   }
