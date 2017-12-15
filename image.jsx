@@ -15,11 +15,10 @@ class Image extends React.Component {
 
     cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
     const config = {
-      webWorkerPath:
-        'node_modules/cornerstone-wado-image-loader/dist/cornerstoneWADOImageLoaderWebWorker.min.js',
+      webWorkerPath: '/cornerstone/cornerstoneWADOImageLoaderWebWorker.min.js',
       taskConfiguration: {
         decodeTask: {
-          codecsPath: 'cornerstoneWADOImageLoaderCodecs.min.js',
+          codecsPath: '/cornerstone/cornerstoneWADOImageLoaderCodecs.min.js',
         },
       },
     };
@@ -140,11 +139,10 @@ class Image extends React.Component {
     }
   }
 
-
   render() {
     const keys = this.state.image ? Object.keys(this.state.image.data.elements) : [];
-    const listItems = keys.map(key =>
-      <li key={key}>{key}: {this.state.image.data.string(key)}</li>);
+    const listItems = this.state.image ?
+      keys.map(key => <li key={key}>{key}: {this.state.image.data.string(key)}</li>) : <li />;
     return (
       <div>
         <h1>Image</h1>

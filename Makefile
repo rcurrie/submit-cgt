@@ -8,8 +8,8 @@ filters:
 	curl -o clinicalFilter.tsv https://docs.google.com/spreadsheets/u/1/d/13n7-F_fi5TWS1vFwuW95X4U_KFqnXIX8eETi9lG04Dk/export?format=tsv
 
 deploy:
-	rsync -a --exclude='.git/' --exclude='node_modules' \
-		. ubuntu@admin.cancergenetrust.org:~/submit-cgt
+	rsync -a --exclude='.git/' --exclude='node_modules' --exclude='samples' \
+		. ubuntu@admin.cancergenetrust.org:~/cgt/submit
 
 run:
 	docker run -d --name submit \

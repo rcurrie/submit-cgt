@@ -108,39 +108,6 @@ class App extends React.Component {
   parseDICOM(image) {
     console.log('Parsing DICOM file');
     this.setState({ image });
-    // PromiseFileReader.readAsArrayBuffer(file)
-    //   .then((arrayBuffer) => new Uint8Array(arrayBuffer))
-    //   .then((image) => {
-    //     this.setState({ image });
-    //   })
-    // .catch(error => console.log(error));
-  
-    // cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-
-    // var imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
-    // console.log("imageId", imageId);
-    // cornerstone.loadImage(imageId).then(function(image) {
-    //   console.log("loaded cornerstone image", image);
-    // })
-    // .catch(error => console.log(error));
-
-    // PromiseFileReader.readAsArrayBuffer(file)
-    //   .then((arrayBuffer) => dicomParser.parseDicom(new Uint8Array(arrayBuffer)))
-    //   .then((image) => {
-    //     // console.log(image);
-    //     this.setState({ image });
-
-    //     console.log(image.string("x00100010"));
-    //     // image.elements.forEach((element) => {
-    //     //   console.log(element.tag);
-    //     // });
-    //     // Object.entries(image.elements).forEach(([key, value]) => {
-    //     //   console.log(key, image.string(value["tag"]));
-
-    //     //   // console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
-    //     // })
-    //   })
-    //   .catch(error => console.log(error));
   }
 
   onDrop(files) {
@@ -201,6 +168,11 @@ class App extends React.Component {
       genomic: this.state.genomic,
     }, null, '\t')], {type: "application/json"});
     saveAs(submission, this.state.patientId);
+
+    if (this.imageComponent.state.image) {
+      const dicom = new Blob([this.imageComponent.state.image.data.byteArray], {type: "application/dicom"});
+      saveAs(dicom, this.state.patientId);
+    }
 	}
 
   render() {
@@ -230,7 +202,9 @@ class App extends React.Component {
           </div>
 					<Clinical clinical={this.state.clinicalFiltered} />
 					<Genomic genomic={this.state.genomic} />
-					<Image image={this.state.image} />
+					<Image
+            ref={(imageComponent) => {this.imageComponent = imageComponent;}}
+            image={this.state.image} />
         </Dropzone>
       </div>
     );
