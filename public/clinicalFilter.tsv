@@ -1,0 +1,226 @@
+CNExT	Sample	CGT	Transform	Consent Category	Comments
+Abstracted By	NMP				PHI
+Accession/Seq (KEEP)	199600108/00				PHI
+Addr at DX, Country	UNITED STATES				PHI
+Addr at DX, Postal Code	93662				PHI
+Addr at DX, State	CA				PHI
+Addr Current, City*	CANTUA CREEK				PHI
+Age at Dx	6	Age at Dx		Dates: Age at diagnosis	Or >90 if >90. 
+Behavior (ICD-O-3)	3				
+Birth Date	32888				PHI
+Chemotherapy, At UCSF	NONE, NOT PLANNED	Chemotherapy, At UCSF		Health: Summary of treatments peformed at UCSF	
+Chemotherapy, Date Started	00/00/0000				
+Chemotherapy, Reason No RX	NOT RECOMMENDED				
+Chemotherapy, Summary	NONE, NOT PLANNED				Not necessarily PHI but may contain info re: other facility (rare)
+Class of Case	DX HERE/STAFF MD, RX HERE				
+cM Code	NOT APPLICABLE				
+cN Code	NOT APPLICABLE				
+Comorbid/Complication 1	NO SECONDARY DX DOCUMENTD	Comorbid/Complication 1		Health: Presence of other diseases or conditions	
+Comorbid/Complication 10	NONE	Comorbid/Complication 10		Health: Presence of other diseases or conditions	
+Comorbid/Complication 2	NONE	Comorbid/Complication 2		Health: Presence of other diseases or conditions	
+Comorbid/Complication 3	NONE	Comorbid/Complication 3		Health: Presence of other diseases or conditions	
+Comorbid/Complication 4	NONE	Comorbid/Complication 4		Health: Presence of other diseases or conditions	
+Comorbid/Complication 5	NONE	Comorbid/Complication 5		Health: Presence of other diseases or conditions	
+Comorbid/Complication 6	NONE	Comorbid/Complication 6		Health: Presence of other diseases or conditions	
+Comorbid/Complication 7	NONE	Comorbid/Complication 7		Health: Presence of other diseases or conditions	
+Comorbid/Complication 8	NONE	Comorbid/Complication 8		Health: Presence of other diseases or conditions	
+Comorbid/Complication 9	NONE	Comorbid/Complication 9		Health: Presence of other diseases or conditions	
+County at Dx	019 (FRESNO)				
+CS Extension					
+CS Lymph Nodes					
+CS Lymph Nodes Eval					
+CS Lymph Nodes Eval					
+CS Lymph Nodes Eval (>1/1/04)					
+CS Mets at Dx					
+CS Mets Eval					
+CS Mets Eval (>1/1/04)					
+CS Site-Specific Factor 1					
+CS Site-Specific Factor 1					
+CS Site-Specific Factor 10					
+CS Site-Specific Factor 11					
+CS Site-Specific Factor 12					
+CS Site-Specific Factor 13					
+CS Site-Specific Factor 14					
+CS Site-Specific Factor 15					
+CS Site-Specific Factor 16					
+CS Site-Specific Factor 17					
+CS Site-Specific Factor 18					
+CS Site-Specific Factor 19					
+CS Site-Specific Factor 2					
+CS Site-Specific Factor 2					
+CS Site-Specific Factor 20					
+CS Site-Specific Factor 21					
+CS Site-Specific Factor 22					
+CS Site-Specific Factor 23					
+CS Site-Specific Factor 24					
+CS Site-Specific Factor 3					
+CS Site-Specific Factor 4					
+CS Site-Specific Factor 5					
+CS Site-Specific Factor 6					
+CS Site-Specific Factor 7					
+CS Site-Specific Factor 8					
+CS Site-Specific Factor 9					
+CS Tumor Size					
+CS Tumor Size					
+CS Tumor Size/Extension Eval					
+CS Tumor Size/Extension Eval					
+CS Tumor Sz/Ext Eval (>1/1/04)					
+cT Code	NOT APPLICABLE				
+cTNM Stage Group	NOT APPLIC				
+Date Case Completed	35610	Case Completed Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Date First Contact	35276	Year First Contact		Dates: Year treatment began	Always known as per Ann, used as basis for all durations
+Date Last Contact or Death	35688	Last Contact or Death Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Date Last Tumor Status	35688	Last Tumor Status Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Date No Treatment Decision	00/00/0000	No Treatment Decision Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Date No Treatment Decision	00/00/0000				
+Date of Diagnosis	35276	Diagnosis Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Date Recurrence	00/00/0000	Recurrence Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Date Recurrence Summary	00/00/0000				
+Death Certificate Cause of Death	0				
+Derived AJCC Flag					
+Derived SS1977					
+Derived SS2000					
+Diagnostic Confirmation	POS HISTOLOGY				
+Distant Metastasis Site 1-3 Summ					
+Dx/Stg Proc, at UCSF	NONE				
+Dx/Stg Proc, Date	00/00/0000				
+Dx/Stg Proc, Summary	NONE				
+EOD, Tumor Size	999				
+First/Last Name	AAVVIILLAA, DOUBLER				PHI
+Grade Path System	NONE()	Grade Path System		Health: Disease staging	
+Grade Path Value	NONE()	Grade Path Value		Health: Disease staging	
+Grade/Differentiation	WELL DIFFERENTIATED	Grade/Differentiation		Health: Disease staging	
+Height					
+Her2/neu, Derived	NONE				
+Her2/neu, FISH	NONE				
+Her2/neu, IHC	NONE				
+HER2/neu, Other	NOT APPLIC				
+Hispanic Origin	SPANISH NOS				
+Hist/Behav	PILOCYTIC ASTROCYTOMA	Hist/Behav		Health: Disease staging	
+Histology Text	PILOCYTIC ASTROCYTOMA			Health: Disease staging	
+Histology/Behavior (ICD-O-3)	94213	Histology/Behavior (ICD-O-3)		Health: Disease staging	
+Hormone, At UCSF	NONE, NOT PLANNED	Hormone, At UCSF		Health: Summary of treatments peformed at UCSF	
+Hormone, Date Started	00/00/0000	Hormone Started Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Hormone, Reason No RX	NOT RECOMMENDED				
+Hormone, Summary	NONE, NOT PLANNED			Health: Summary of treatments peformed at UCSF	Not necessarily PHI but may contain info re: other facility (rare)
+Hospital of Most Definitive Surg	VALLEY CHILDRENS (OLD)				
+Hospital Referred From	UNREFERRED PATIENT				
+Hospital Referred To	UNREFERRED PATIENT				
+ICD-O-3 Conversion Flag	CONVERTED WITHOUT REVIEW(1)				
+ICD-O-3 Review Flag	NO REVIEW NECESSARY(0)				
+Immunotherapy, At UCSF	NONE, NOT PLANNED	Immunotherapy, At UCSF		Health: Summary of treatments peformed at UCSF	
+Immunotherapy, Date Started	00/00/0000	Immunotherapy Days Started from First Contact	daysFromFirstContact	Durations: Treatments	
+Immunotherapy, Summary	NONE, NOT PLANNED			Health: Summary of treatments peformed at UCSF	Not necessarily PHI but may contain info re: other facility (rare)
+Industry Text					
+Laterality	NOT PAIRED				
+Lymph-Vascular Invasion	NONE()				
+MRN	TEST96108				
+Multiplicity Counter					
+Name, First	DOUBLER				
+Name, Last	AAVVIILLAA				
+Occupation, Text					
+Pathology Report #-Biopsy/FNA					
+Pathology Report #-Surgery					
+Patient History, Alcohol	NONE				
+Patient No Research flag	NO FLAG				
+Payer Source 1 at DX	MEDICAID				
+Payer Source 1 at DX	MEDICAID				
+Payer Source 2 at DX	UNKNOWN INSURANCE STATUS				
+Payer Source 2 at DX	UNKNOWN INSURANCE STATUS				
+Payment Source (Text)	MEDICAL				
+Physician, Managing	MIGNACCA, ROBERT C M.D.				
+Physician, Medical Oncology	MIGNACCA, ROBERT C M.D.				
+Physician, Radiation Oncology	ERROR				
+Physician, Surgeon	WOODWARD, MEREDITH V. MD				
+pM Code	NOT APPLICABLE				
+pN Code	NOT APPLICABLE				
+Primary Site Text	CEREBELLUM				
+pT Code	NOT APPLICABLE				
+pTNM Stage Group	NOT APPLIC				
+Race	WHITE				
+Radiation, At UCSF	NONE	Radiation, At UCSF		Health: Summary of treatments peformed at UCSF	
+Radiation, Date Started	00/00/0000	Radiation Days Started from First Contact	daysFromFirstContact	Durations: Treatments	
+Radiation, Reason No RX	NOT RECOMMENDED/AUTOPSY				
+Radiation, Summary	NONE				
+Recurrence, Distant Site 1-3 Sum					
+Recurrence, Type Summary	UNKNOWN				
+Regional Nodes Examined	99				
+Regional Nodes Positive	99				
+Reportable Flag	1				
+RX Date, Earliest 1st Course RX	35276	Earliest 1st Course RX Days from First Contact	daysFromFirstContact	Durations: Treatments	
+RX Date, Last 1st Course RX	35276	Last 1st Course RX Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Scope LN Surgery, At UCSF	UNKNOWN, NOT APPLICABLE				
+Scope LN Surgery, Summary	UNKNOWN, NOT APPLICABLE				
+Sex	MALE	Sex		Demographic and Other: Gender	
+Site - Primary	C716 (CEREBELLUM NOS)	Site - Primary		Health: Disease staging	
+Site, Group (SEER)	Brain(31010)	Site, Group (SEER)		Health: Disease staging	
+Source of Casefinding	PATH/AUTOPSY/CYTOLOGY (H)(20)	Casefinding Source		Health: Disease staging	
+Summary of RX, 1st Course	SURGERY	Summary of RX, 1st Course		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 1st Course UCSF	NONE	Summary of RX, 1st Course UCSF		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 2nd Course	ERROR	Summary of RX, 2nd Course		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 3rd Course	ERROR	Summary of RX, 3rd Course		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 4th Course	ERROR	Summary of RX, 4th Course		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 5th Course	ERROR	Summary of RX, 5th Course		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 6th Course	ERROR	Summary of RX, 6th Course		Health: Summary of treatments peformed at UCSF	
+Summary of RX, 7th Course	ERROR	Summary of RX, 7th Course		Health: Summary of treatments peformed at UCSF	
+Summary Stage (1977)	NONE				
+Summary Stage (2000)	NONE				
+Surgery of Primary Site, Proc 1	LOCAL EXCISION OF TUMOR; EXCISIONAL BIOPSY	Surgery of Primary Site, Proc 1		Health: Summary of treatments peformed at UCSF	
+Surgery of Primary Site, Proc 2	NONE; AUTOPSY ONLY	Surgery of Primary Site, Proc 2		Health: Summary of treatments peformed at UCSF	
+Surgery of Primary Site, Proc 3	NONE; AUTOPSY ONLY	Surgery of Primary Site, Proc 3		Health: Summary of treatments peformed at UCSF	
+Surgery of Primary Site, Summary	LOCAL EXCISION OF TUMOR; EXCISIONAL BIOPSY			Health: Summary of treatments peformed at UCSF	Not necessarily PHI but may contain info re: other facility (rare)
+Surgery to Other Sites, At UCSF	NONE	Surgery to Other Sites, At UCSF		Health: Summary of treatments peformed at UCSF	
+Surgery to Other Sites, Summary	NONE			Health: Summary of treatments peformed at UCSF	Not necessarily PHI but may contain info re: other facility (rare)
+Surgery, Date Most Definitive RX	35276	Surgery Most Definitive RX Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Surgery, First Course Date of RX	35276	Surgery First Course Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Surgery, Primary Site, at UCSF	NONE; AUTOPSY ONLY	Surgery, Primary Site, at UCSF		Health: Summary of treatments peformed at UCSF	
+Surgery, Proc 1, Date of RX	35276	Surgery Proc 1 RX Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Surgery, Proc 1, Hospital of RX	VALLEY CHILDRENS (OLD)	Surgery, Proc 1, Hospital of RX		Health: Summary of previous treatmets	
+Surgery, Proc 2, Date of RX	00/00/0000	Surgery Proc 2 RX Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Surgery, Proc 2, Hospital of RX	UNREFERRED PATIENT	Surgery, Proc 2, Hospital of RX		Health: Summary of previous treatmets	
+Surgery, Proc 3, Date of RX	00/00/0000	Surgery Proc 3 RX Days from First Contact	daysFromFirstContact	Durations: Treatments	
+Surgery, Proc 3, Hospital of RX	UNREFERRED PATIENT	Surgery, Proc 3, Hospital of RX		Health: Summary of previous treatmets	
+Surgery, Reason No RX	CANCER SURG PERFORMED				
+Surgical Margins, Summary	NO RESIDUAL TUMOR				Not necessarily PHI but may contain info re: other facility (rare)
+Suspense Flag	COMPLETE	Suspense Flag			
+Systemic/Surgery Sequence	NONE	Systemic/Surgery Sequence			
+Systemic/Surgery Sequence	NONE	Systemic/Surgery Sequence			
+Text, Chemotherapy Summary	ONC CONSULT: RT AND CHEMO NOT NECESSARY SINCE TMR TOTALLY REMOVED 				
+Text, Final Dx					
+Text, Hormone Summary					
+Text, Immunotherapy Summary					
+Text, Labs					
+Text, Operative Findings	7/30/96 INFRANTENTORIAL CRANIOTOMY AND GROSS TOTA LRESECTION OF TUMOR: TOTAL REMOVAL OF ALL GROSS TM R 				
+Text, Pathology	7/30/96 SU96-2083 CEREBELLAR TMR: PILOCYTIC ASTROCYTOMA, X 3 SAMPLES ARACHMOID BX: NON DX. MAYO MEDICAL REVIEW: GRADE 1 PILOCYTIC ASTROCYTOMA 				
+Text, Physical Exam	7/30/96 HEADACHE, VOMITING X 2 MO THOUGHT TO BE PNEUMONIA, NOW STAGGERING GAIT. WT LOSS. PE: NML NEURO. UNSTEADY GAIT. 				
+Text, Radiation (Beam) Summary					
+Text, Remarks					
+Text, Scopes					
+Text, Surgery Summary					
+Text, Surgery Summary (CA)					
+Text, Xrays/Scans	7/30/96 CT HEAD: LG POST FOSS MASS DISPLACING CEREBELLUM RESULTING IN HYDROCEPHALUS 7/31/96 CXR: PLATE LIKE AREAS OF ATELECTASIS 8/1/96 CT HEAD: NO CONVINCING RESIDUAL TMR 				
+TNM, Clin, Descriptor		TNM, Clin, Descriptor		Health: Diagnosis	
+TNM, Clin, Staged By	NOT ELIGIBLE	TNM, Clin, Staged By		Health: Diagnosis	
+TNM, Mixed Stage	NOT APPLIC	TNM, Mixed Stage		Health: Diagnosis	
+TNM, Mixed Stage, Staged By	NOT ELIGIBLE(88)	TNM, Mixed Stage, Staged By		Health: Diagnosis	
+TNM, Path, Descriptor		TNM, Path, Descriptor		Health: Diagnosis	
+TNM, Path, Staged By	NOT ELIGIBLE(88)	TNM, Path, Staged By		Health: Diagnosis	
+TNM/CS Stage	88	TNM/CS Stage		Health: Diagnosis	
+TNM/Derived Stage	NOT APPLIC	TNM/Derived Stage		Health: Diagnosis	
+Transplant/Endocrine, At UCSF	NONE; NOT APPLICABLE	Transplant/Endocrine, At UCSF		Health: Summary of treatments peformed at UCSF	
+Transplant/Endocrine, Summary	NONE; NOT APPLICABLE				
+Transplant/Endocrine, Summy Date	00/00/0000				
+Treatment Status, Summary	NONE				
+Treatment Status, Summary	NONE()				
+Tumor Marker 1(ERA,CEA,AFP,Urine	UNKNOWN, NO INFORMATION	Tumor Marker 1(ERA,CEA,AFP,Urine		Health: Disease staging	
+Tumor Marker 2(PRA, PSA, hCG)	UNKNOWN, NO INFORMATION	Tumor Marker 2(PRA, PSA, hCG)		Health: Disease staging	
+Tumor Status	NOT FREE THIS TUMOR	Tumor Status		Health: Disease staging	
+Type Last Cancer Follow-up	PHYSICIAN	Type Last Cancer Follow-up			
+Type Last Cancer Follow-up	PHYSICIAN	Type Last Cancer Follow-up			
+Type Last Cancer Follow-up	PHYSICIAN	Type Last Cancer Follow-up			
+Type of Admission	INPATIENT ONLY	Type of Admission			
+Type of Last Patient Follow-up	PHYSICIAN	Type of Last Patient Follow-up			
+Type of Last Patient Follow-up	PHYSICIAN	Type of Last Patient Follow-up			
+Vital Status	ALIVE	Vital Status		Health: Disease staging	
+Weight		Weight			
+Year First Seen at UCSF	1996	Year First Seen at UCSF		Dates:Year treatment began	
