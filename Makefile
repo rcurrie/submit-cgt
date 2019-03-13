@@ -1,5 +1,8 @@
-DOMAIN ?= "ucsf.edu"
-ID ?= "f9b6a782-bbf5-4be8-bf7e-d1a9586d9552"
+DOMAIN ?= ucsf.edu
+ID ?= 104ec531-5d95-41e2-ac72-f6cff2006b8e
+
+up:
+	ipfs daemon
 
 clean:
 	echo "Resetting steward to no submissions, no peers, and domain = $(DOMAIN)"
@@ -7,15 +10,20 @@ clean:
 	ipfs init --profile server
 	echo '{"domain": "$(DOMAIN)", "submissions": []}' | ipfs add -q | xargs ipfs name publish
 
-up:
-	ipfs daemon
+cors:
+	ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
+	ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+	ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
 
 normalize:
 	python3 normalize.py \
-		--files `find ~/UCSC/cgt/ucsf/submissions/$(ID)/0 -type f`
+		--files `find submissions/* -type f -name "*.json"`
 
 submit:
-	python3 submit.py \
-		--id $(ID) \
-		--days 0 \
-		--files `find ~/UCSC/cgt/ucsf/submissions/$(ID)/0 -type f`
+	python3 submit.py --id $(ID) --days 0 --path submissions/$(ID)/0
+
+add:
+	curl "https://ipfs.infura.io:5001/api/v0/add?pin=false" \
+    -X POST \
+    -H "Content-Type: multipart/form-data" \
+    -F file=@"submissions/104ec531-5d95-41e2-ac72-f6cff2006b8e/0/foundation.json"

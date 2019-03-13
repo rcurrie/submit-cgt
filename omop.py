@@ -5,24 +5,16 @@ specification
 import glob
 import argparse
 import json
-import ipfsapi
 
 
 parser = argparse.ArgumentParser(
-    description="Make a CGT submission to an IPFS server")
-parser.add_argument('--id', required=True,
-                    help="Patient CGT ID")
-parser.add_argument('--days', required=True,
-                    help="Days from birth of submission")
-parser.add_argument('--path', required=True,
-                    help="Path to files for submission")
+    description="Convert between OMOP tsv and json")
+parser.add_argument('--json', help="Convert to JSON")
+parser.add_argument('--tsv', help="Convert to TSV")
 args = parser.parse_args()
 
-print(args)
-
-ipfs = ipfsapi.Client(host="127.0.0.1", port=5001)
-print("Connected")
-
+if args.json:
+    print("Converting from TSV to JSON")
 
 # Add all the files to IPFS
 paths = glob.glob("{}/**/*".format(args.path), recursive=True)
@@ -31,7 +23,7 @@ print(paths)
 files = [ipfs.add(path) for path in paths]
 
 # Add the submission to IPFS
-submission = {"cgt_id": args.id, "days_from_birth": int(args.days)}
+submission = {"id": args.id, "days_from_birth": int(args.days)}
 submission["files"] = sorted([{"name": f["Name"], "multihash": f["Hash"]} for f in files],
                              key=lambda k: k["name"] + k["multihash"])
 print("submission", submission)

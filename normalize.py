@@ -1,9 +1,8 @@
-import os
 import json
 import argparse
 
 parser = argparse.ArgumentParser(
-    description="Normalize a json file for submission")
+    description="Normalize a json file INPLACE for submission")
 parser.add_argument('--files', required=True,
                     nargs='+', action='append',
                     metavar=('name', 'path'),
@@ -15,5 +14,5 @@ for path in args.files[0]:
         print("Normalizing", path)
         with open(path) as f:
             normalized = json.dumps(json.loads(f.read()), sort_keys=True)
-        with open(path + ".norm", "w") as f:
+        with open(path, "w") as f:
             f.write(normalized)
