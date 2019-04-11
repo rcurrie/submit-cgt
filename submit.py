@@ -81,7 +81,12 @@ if __name__ == '__main__':
     for path in paths:
         print("Remaining: {} File: {} Size: {}".format(
             count, os.path.basename(path), os.path.getsize(path)), end="\r")
-        files.append(ipfs.add(path))
+        try:
+            result = ipfs.add(path)
+        except ipfsapi.exceptions.DecodingError:
+            print("Error adding {}".format(path))
+
+        files.append(result)
         count -= 1
 
     print("Added {} files".format(len(files)))
@@ -92,8 +97,8 @@ if __name__ == '__main__':
         submission["days_from_birth"] = args.days
     submission["files"] = sorted([{"name": f["Name"], "multihash": f["Hash"]} for f in files],
                                  key=lambda k: k["name"] + k["multihash"])
-    print("Submission:")
-    pprint.pprint(submission)
+    # print("Submission:")
+    # pprint.pprint(submission)
     submission_hash = ipfs.add_str(json.dumps(submission, sort_keys=True))
     print("Submision Hash:", submission_hash)
 
