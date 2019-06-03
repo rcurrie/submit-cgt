@@ -6,6 +6,7 @@ Requirements:
     pip install ipfs-api
 """
 import sys
+import os
 import json
 import argparse
 import ipfsapi
@@ -21,11 +22,16 @@ if __name__ == '__main__':
                         help="Multihash of steward index to download")
     args = parser.parse_args()
 
-    print("Connecting to infura...")
+    # print("Connecting to ipfs.io...")
+    # ipfs = ipfsapi.connect("https://ipfs.io", 5001)
+
+    print("Connecting to infura.io...")
     ipfs = ipfsapi.connect("https://ipfs.infura.io", 5001)
 
     # Get and save the steward's index
+    print("Getting steward index...")
     steward_index = json.loads(ipfs.cat(args.multihash))
+    print("Found {} submissions".format(len(steward_index["submissions"])))
     ipfs.get(args.multihash, filepath=args.output)
     print("Downloading {} submissions from {}".format(
         len(steward_index["submissions"]), steward_index["domain"]))
@@ -37,5 +43,11 @@ if __name__ == '__main__':
         print(submission["cgt_public_id"])
 
         for file in submission["files"][0:args.max]:
-            print(file["name"])
-            ipfs.get(file["multihash"], filepath=args.output)
+            if not os.path.exists("{}/{}".format(args.output, file["multihash"])):
+                print(file["name"])
+                try:
+                    ipfs.get(file["multihash"], filepath=args.output)
+                except:
+                    print("Error downloading {} {}".format(file["multihash"], sys.exc_info()[0]))
+
+    print("Done.")

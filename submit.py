@@ -3,6 +3,8 @@ Submit files to an IPFS server conforming to the CGT submission
 specification
 """
 import os
+import sys
+# import time
 import json
 import glob
 import pprint
@@ -12,12 +14,12 @@ import ipfsapi
 __CUR_CGT_INDEX_FILE_NAME__ = "current-cgt-index-hash.txt"
 
 
-def get_index(ipfs, domain):
+def get_index(ipfs, domain, pin):
     """ Get the current index using ./cur_cgt_index_hash or create one if not existent """
     if os.path.exists(__CUR_CGT_INDEX_FILE_NAME__):
         print("Loading existing index hash from ", __CUR_CGT_INDEX_FILE_NAME__)
         with open(__CUR_CGT_INDEX_FILE_NAME__) as f:
-            index_hash = f.read()
+            index_hash = f.read().strip()
         index = json.loads(ipfs.cat(index_hash))
     else:
         print("No existing index hash, creating empty default")
@@ -25,21 +27,26 @@ def get_index(ipfs, domain):
         index_hash = ipfs.add_str(json.dumps(index, sort_keys=True))
         with open(__CUR_CGT_INDEX_FILE_NAME__, "w") as f:
             f.write(index_hash)
+        if pin:
+            ipfs.pin_add(index_hash)
     return index, index_hash
 
 
-def add_submission(ipfs, submission_hash):
+def add_submission(ipfs, submission_hash, pin):
     """ Add the submission to the index if not already there """
+    print("Adding submission", submission_hash)
     with open(__CUR_CGT_INDEX_FILE_NAME__) as f:
-        index_hash = f.read()
+        index_hash = f.read().strip()
     index = json.loads(ipfs.cat(index_hash))
 
     if submission_hash in index["submissions"]:
         print("Submission already in steward's index")
     else:
-        index["submissions"] = sorted(
-            index["submissions"] + [submission_hash])
+        index["submissions"] = sorted(list(set(
+            index["submissions"] + [submission_hash])))
         index_hash = ipfs.add_str(json.dumps(index, sort_keys=True))
+        if pin:
+            ipfs.pin_add(index_hash)
         with open(__CUR_CGT_INDEX_FILE_NAME__, "w") as f:
             f.write(index_hash)
 
@@ -60,13 +67,24 @@ if __name__ == '__main__':
                         help="Domain to initialize index")
     parser.add_argument('--days', required=False,
                         help="Days from birth of submission")
+    parser.add_argument('--pin', required=False, default=False,
+                        help="Pin objects in IPFS")
     args = parser.parse_args()
+
+    # Hack
+    # args.pin = True
 
     print("Connecting to infura...")
     ipfs = ipfsapi.connect("https://ipfs.infura.io", 5001)
 
+    if args.pin:
+        print("Pinning is ON")
+    else:
+        print("Pinning is OFF")
+
     print("Getting index...")
-    index, index_hash = get_index(ipfs, args.domain)
+    index, index_hash = get_index(ipfs, args.domain, args.pin)
+    print("Existing index:", index)
 
     # Add all the files to IPFS
     files = []
@@ -74,19 +92,22 @@ if __name__ == '__main__':
     paths = [p for p in paths if not os.path.isdir(p)]
     print("Found {} files".format(len(paths)))
 
-    print("NOTE LIMITING TO 7 FILES")
-    paths = paths[0:7]
+    # print("NOTE LIMITING TO 5 FILES")
+    # paths = paths[0:5]
 
     count = len(paths)
     for path in paths:
         print("Remaining: {} File: {} Size: {}".format(
             count, os.path.basename(path), os.path.getsize(path)), end="\r")
-        try:
-            result = ipfs.add(path)
-        except ipfsapi.exceptions.DecodingError:
-            print("Error adding {}".format(path))
+        result = ipfs.add(path, pin=args.pin)
 
-        files.append(result)
+        try:
+            result = ipfs.add(path, pin=args.pin)
+            files.append(result)
+        except:
+            print("Error adding {} {}".format(path, sys.exc_info()[0]))
+            print("Continuing...")
+
         count -= 1
 
     print("Added {} files".format(len(files)))
@@ -100,6 +121,8 @@ if __name__ == '__main__':
     # print("Submission:")
     # pprint.pprint(submission)
     submission_hash = ipfs.add_str(json.dumps(submission, sort_keys=True))
+    if args.pin:
+        ipfs.pin_add(submission_hash)
     print("Submision Hash:", submission_hash)
 
-    add_submission(ipfs, submission_hash)
+    add_submission(ipfs, submission_hash, args.pin)
